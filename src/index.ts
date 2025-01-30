@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import { chunk } from 'lodash';
 import { stringify } from 'csv-stringify';
 import fs from 'fs';
+import path from 'path';
 
 type generic = {
   [key: string]: string;
@@ -79,10 +80,14 @@ const data = reqJson as unknown as IArguments;
       });
 
       stringify(resJson, { header: true }, function (err, output) {
-        fs.writeFile('data.csv', output, function (err) {
-          if (err) throw err;
-          console.log('CSV Gerado com sucesso!');
-        });
+        fs.writeFile(
+          process.cwd() + '/outputs/data.csv',
+          output,
+          function (err) {
+            if (err) throw err;
+            console.log('CSV Gerado com sucesso!');
+          }
+        );
       });
     } else console.log('Falha ao buscar os dados, tente novamente.');
   }
