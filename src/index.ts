@@ -35,6 +35,15 @@ const data = reqJson as unknown as IArguments;
     height: 1080,
   });
 
+  console.log('#### Buscando dados no banco central ####\n');
+  console.log('Dados informados:\n');
+
+  Object.keys(reqJson).forEach((key) => {
+    console.log(`${key}: ${reqJson[key]}`);
+  });
+
+  console.log('\n#### Buscando dados no banco central ####\n');
+
   await page.goto(
     `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico/?
     // historicotaxajurosdiario_page=1&
