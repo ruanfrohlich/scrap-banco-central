@@ -4,7 +4,7 @@ import { parse } from 'url';
 import { StatusCodes } from 'http-status-codes';
 import { isUndefined, some } from 'lodash';
 import { bcbScrap } from './functions';
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'path';
 
 interface IArguments extends ParsedUrlQuery {
@@ -14,7 +14,7 @@ interface IArguments extends ParsedUrlQuery {
   periodo: string;
 }
 
-const port = process.env.PORT || 10000;
+const port = process.env.PORT ?? 3000;
 
 const server = createServer(async (req, res) => {
   const { url, method } = req;
