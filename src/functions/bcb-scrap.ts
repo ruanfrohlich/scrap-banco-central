@@ -15,49 +15,54 @@ const scrapBCB = async (data: IArguments) => {
     height: 1080,
   });
 
-  await page.goto(
-    `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico/?
+  try {
+    await page.goto(
+      `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico/?
     // historicotaxajurosdiario_page=1&
     // codigoSegmento=${data.codSegmento}&
     // codigoModalidade=${data.codModalidade}&
     // tipoModalidade=${data.tipoModalidade}&
     // InicioPeriodo=${data.periodo}`,
-    {
-      waitUntil: 'networkidle2',
-    }
-  );
+      {
+        waitUntil: 'networkidle2',
+        timeout: 10000,
+      }
+    );
 
-  await page.waitForSelector('table.table');
+    await page.waitForSelector('table.table');
 
-  const htmlContent = await page.content();
+    const htmlContent = await page.content();
 
-  if (htmlContent) {
-    const $ = cheerio.load(htmlContent);
-    const list: string[] = [];
+    if (htmlContent) {
+      const $ = cheerio.load(htmlContent);
+      const list: string[] = [];
 
-    $('table')
-      .find('tbody > tr')
-      .each((i, tr) => {
-        $(tr)
-          .find('> td')
-          .each((j, td) => {
-            const value = $(td).text();
-            list.push(value.replace(' ', ''));
-          });
-      });
-
-    if (list.length > 0) {
-      const chunked = chunk(list, 4);
-
-      chunked.forEach((chunk) => {
-        resJson.push({
-          position: chunk[0],
-          bankName: chunk[1],
-          monthlyRate: chunk[2],
-          annualRate: chunk[3],
+      $('table')
+        .find('tbody > tr')
+        .each((i, tr) => {
+          $(tr)
+            .find('> td')
+            .each((j, td) => {
+              const value = $(td).text();
+              list.push(value.replace(' ', ''));
+            });
         });
-      });
-    } else console.log('Falha ao buscar os dados, tente novamente.');
+
+      if (list.length > 0) {
+        const chunked = chunk(list, 4);
+
+        chunked.forEach((chunk) => {
+          resJson.push({
+            position: chunk[0],
+            bankName: chunk[1],
+            monthlyRate: chunk[2],
+            annualRate: chunk[3],
+          });
+        });
+      } else console.log('Falha ao buscar os dados, tente novamente.');
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   await browser.close();
