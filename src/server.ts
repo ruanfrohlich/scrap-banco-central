@@ -14,7 +14,7 @@ interface IArguments extends ParsedUrlQuery {
   periodo: string;
 }
 
-const port = process.env.PORT ?? 4000;
+const port = process.env.PORT ?? 3000;
 
 const server = createServer(async (req, res) => {
   const { url, method } = req;
