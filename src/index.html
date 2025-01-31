@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline'"
+    />
     <meta charset="UTF-8" />
     <title>Calculadora de Taxas de Juros</title>
     <style>
@@ -56,6 +60,7 @@
   </head>
   <body>
     <div id="app">
+      <p id="info"></p>
       <h1>Calculadora de Taxas de Juros</h1>
 
       <label for="startDate">Data Inicial:</label>
@@ -79,88 +84,6 @@
 
       <div id="result" class="resultado"></div>
     </div>
-    <script>
-      const resultDiv = document.getElementById('result');
-      const btn = document.getElementById('calculateBtn');
-
-      // Exemplo de função (fake) para obter taxa média do BCB
-      async function fetchAverageRateFromBCB(startDate, financingCode) {
-        const req = await fetch(
-          `/api/?codSegmento=1&codModalidade=${financingCode}&tipoModalidade=D&periodo=${startDate}`
-        );
-
-        const data = await req.json();
-
-        return data.average;
-      }
-
-      // Função principal de cálculo
-      async function calculateAverageRate() {
-        const startDate = document.getElementById('startDate').value;
-        const financingCode = document.getElementById('financingType').value;
-        const contractRateStr = document.getElementById('contractRate').value;
-        // Limpa resultado a cada novo cálculo
-        resultDiv.textContent = '';
-
-        // Verificações básicas
-        if (!startDate) {
-          resultDiv.textContent = 'Por favor, selecione a data inicial.';
-          return;
-        }
-
-        if (!contractRateStr) {
-          resultDiv.textContent =
-            'Por favor, insira a taxa de juros do contrato.';
-          return;
-        }
-
-        const contractRate = parseFloat(contractRateStr);
-
-        if (isNaN(contractRate)) {
-          resultDiv.textContent =
-            'Taxa de juros inválida. Digite um número válido.';
-          return;
-        }
-
-        try {
-          btn.innerText = 'Carregando';
-          btn.setAttribute('disabled', '');
-
-          // 1) Buscar a taxa média no período (simulada)
-          const averageRate = await fetchAverageRateFromBCB(
-            startDate,
-            financingCode
-          );
-
-          btn.removeAttribute('disabled');
-          btn.innerText = 'Calcular';
-
-          // 2) Calcular se a taxa do contrato está 50% acima da média
-          const limiarAbusivo = 1.5 * averageRate;
-
-          // Montando mensagem de resultado
-          let mensagem = `• Período inicial: ${startDate}\n`;
-          mensagem += `• Código do Financiamento: ${financingCode}\n\n`;
-          mensagem += `Taxa média do período (simulada): ${averageRate.toFixed(2)}% ao mês.\n`;
-          mensagem += `Taxa do contrato: ${contractRate.toFixed(2)}% ao mês.\n\n`;
-
-          if (contractRate > limiarAbusivo) {
-            mensagem +=
-              'Resultado: A taxa do contrato está mais de 50% acima da média (ABUSIVA).';
-          } else {
-            mensagem +=
-              'Resultado: A taxa do contrato NÃO está 50% acima da média.';
-          }
-
-          resultDiv.textContent = mensagem;
-        } catch (error) {
-          console.error(error);
-          resultDiv.textContent = 'Ocorreu um erro ao buscar dados do BCB.';
-        }
-      }
-
-      // Evento de clique no botão "Calcular"
-      btn.addEventListener('click', calculateAverageRate);
-    </script>
+    <script src="renderer.ts"></script>
   </body>
 </html>
