@@ -33,6 +33,11 @@
       button:hover {
         background-color: #005fcc;
       }
+      button:disabled {
+        opacity: 0.2;
+        background-color: #3d3d3d;
+        cursor: default;
+      }
       .resultado {
         margin-top: 20px;
         font-weight: bold;
@@ -75,11 +80,11 @@
       <div id="result" class="resultado"></div>
     </div>
     <script>
+      const resultDiv = document.getElementById('result');
+      const btn = document.getElementById('calculateBtn');
+
       // Exemplo de função (fake) para obter taxa média do BCB
       async function fetchAverageRateFromBCB(startDate, financingCode) {
-        console.log(startDate);
-        console.log('loading start');
-
         const req = await fetch(
           `/api/?codSegmento=1&codModalidade=${financingCode}&tipoModalidade=D&periodo=${startDate}`
         );
@@ -94,8 +99,6 @@
         const startDate = document.getElementById('startDate').value;
         const financingCode = document.getElementById('financingType').value;
         const contractRateStr = document.getElementById('contractRate').value;
-        const resultDiv = document.getElementById('result');
-
         // Limpa resultado a cada novo cálculo
         resultDiv.textContent = '';
 
@@ -120,11 +123,17 @@
         }
 
         try {
+          btn.innerText = 'Carregando';
+          btn.setAttribute('disabled', '');
+
           // 1) Buscar a taxa média no período (simulada)
           const averageRate = await fetchAverageRateFromBCB(
             startDate,
             financingCode
           );
+
+          btn.removeAttribute('disabled');
+          btn.innerText = 'Calcular';
 
           // 2) Calcular se a taxa do contrato está 50% acima da média
           const limiarAbusivo = 1.5 * averageRate;
@@ -151,9 +160,7 @@
       }
 
       // Evento de clique no botão "Calcular"
-      document
-        .getElementById('calculateBtn')
-        .addEventListener('click', calculateAverageRate);
+      btn.addEventListener('click', calculateAverageRate);
     </script>
   </body>
 </html>
