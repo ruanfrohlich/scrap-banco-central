@@ -34,18 +34,14 @@
   },
   "build": {
     "appId": "com.ruanfrohlich.BCBInterestCheck",
+    "productName": "BCB Intent Check",
     "artifactName": "BCBInterestCheck-${version}.${ext}",
     "icon": "./images/logo.ico"
   },
-  "extraFiles": [
-    "puppeteer"
-  ],
   "scripts": {
     "dev": "nodemon --watch src -e js,ts,html -x 'yarn start'",
     "start": "yarn build && electron .",
-    "build": "rimraf -rf electron && parcel build",
-    "app:dir": "electron-builder --dir",
-    "app:dist": "electron-builder -w"
+    "build": "rimraf -rf electron && parcel build && electron-builder -w --x64"
   },
   "dependencies": {
     "@puppeteer/browsers": "^2.7.0",
