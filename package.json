@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch src -e js,ts,html -x 'ts-node src/server.ts'",
-    "start": "ts-node src/server.ts"
+    "start": "puppeteer browsers install chrome && ts-node src/server.ts"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
