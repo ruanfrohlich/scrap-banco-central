@@ -4,13 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -w index.ts -x 'ts-node src/index.ts'",
-    "start": "ts-node src/index.ts",
-    "build": "parcel build src/index.ts"
+    "dev": "nodemon --watch src -e js,ts,html -x 'ts-node src/server.ts'",
+    "start": "ts-node src/server.ts"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
-    "csv-stringify": "^6.5.2",
     "lodash": "^4.17.21",
     "puppeteer": "^24.1.1"
   },
@@ -18,7 +16,7 @@
     "@types/axios": "^0.14.4",
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.12.0",
-    "axios": "^1.7.9",
+    "http-status-codes": "^2.3.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",

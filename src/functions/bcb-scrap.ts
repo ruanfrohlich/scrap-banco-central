@@ -1,32 +1,12 @@
 import * as puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { chunk } from 'lodash';
-import { stringify } from 'csv-stringify';
-import fs from 'fs';
-import path from 'path';
+import { GenericObject, IArguments } from '../types';
 
-type generic = {
-  [key: string]: string;
-};
+const resJson: GenericObject[] = [];
+let totalMonthly: number = 0;
 
-interface IArguments {
-  codSegmento: string;
-  codModalidade: string;
-  tipoModalidade: string;
-  periodo: string;
-}
-
-const args = process.argv.slice(2);
-const reqJson: generic = {};
-const resJson: generic[] = [];
-
-args.forEach((arg) => {
-  const splitted = arg.split('=');
-  reqJson[splitted[0]] = splitted[1];
-});
-const data = reqJson as unknown as IArguments;
-
-(async () => {
+const scrapBCB = async (data: IArguments) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -34,15 +14,6 @@ const data = reqJson as unknown as IArguments;
     width: 1920,
     height: 1080,
   });
-
-  console.log('#### Buscando dados no banco central ####\n');
-  console.log('Dados informados:\n');
-
-  Object.keys(reqJson).forEach((key) => {
-    console.log(`${key}: ${reqJson[key]}`);
-  });
-
-  console.log('\n#### Buscando dados no banco central ####\n');
 
   await page.goto(
     `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico/?
@@ -56,9 +27,7 @@ const data = reqJson as unknown as IArguments;
     }
   );
 
-  await page.screenshot({
-    path: 'preview.png',
-  });
+  await page.waitForSelector('table.table');
 
   const htmlContent = await page.content();
 
@@ -79,7 +48,6 @@ const data = reqJson as unknown as IArguments;
 
     if (list.length > 0) {
       const chunked = chunk(list, 4);
-      let totalMonthly: number = 0;
 
       chunked.forEach((chunk) => {
         resJson.push({
@@ -89,16 +57,22 @@ const data = reqJson as unknown as IArguments;
           annualRate: chunk[3],
         });
       });
-
-      for (const el of resJson) {
-        totalMonthly += parseFloat(el.monthlyRate);
-      }
-
-      console.log(
-        `Total média do periodo ${reqJson.periodo}: ${(totalMonthly / resJson.length).toFixed(2)}%`
-      );
     } else console.log('Falha ao buscar os dados, tente novamente.');
   }
 
   await browser.close();
-})();
+};
+
+export default async (data: IArguments): Promise<number> => {
+  await scrapBCB(data);
+
+  for (const el of resJson) {
+    totalMonthly += parseFloat(el.monthlyRate);
+  }
+
+  const monthlyAverage = totalMonthly / resJson.length;
+
+  totalMonthly = 0;
+
+  return Math.floor(monthlyAverage * 100) / 100;
+};
