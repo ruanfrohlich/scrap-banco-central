@@ -6,6 +6,7 @@ import { isUndefined, some } from 'lodash';
 import { bcbScrap } from './functions';
 import fs from 'node:fs';
 import path from 'path';
+import 'dotenv/config';
 
 interface IArguments extends ParsedUrlQuery {
   codSegmento: string;
