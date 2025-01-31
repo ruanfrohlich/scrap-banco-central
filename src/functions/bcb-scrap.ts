@@ -2,12 +2,29 @@ import * as puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { chunk } from 'lodash';
 import { GenericObject, IArguments } from '../types';
+import os from 'os';
 
 const resJson: GenericObject[] = [];
 let totalMonthly: number = 0;
+let browserPath: string = '';
+const userInfo = os.userInfo();
 
+switch (os.platform()) {
+  case 'win32': {
+    browserPath =
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+    break;
+  }
+  case 'linux': {
+    browserPath = `/home/${userInfo.username}/.cache/puppeteer/chrome/linux-132.0.6834.110/chrome-linux64/chrome`;
+    break;
+  }
+}
 const scrapBCB = async (data: IArguments) => {
-  const browser = await puppeteer.launch({ browser: 'chrome' });
+  const browser = await puppeteer.launch({
+    executablePath: browserPath,
+  });
+
   const page = await browser.newPage();
 
   await page.setViewport({

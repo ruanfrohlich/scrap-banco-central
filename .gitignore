@@ -1,6 +1,6 @@
 # custom
 electron/
-
+puppeteer/
 # Logs
 logs
 *.log

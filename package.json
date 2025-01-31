@@ -37,6 +37,9 @@
     "artifactName": "BCBInterestCheck-${version}.${ext}",
     "icon": "./images/logo.ico"
   },
+  "extraFiles": [
+    "puppeteer"
+  ],
   "scripts": {
     "dev": "nodemon --watch src -e js,ts,html -x 'yarn start'",
     "start": "yarn build && electron .",
