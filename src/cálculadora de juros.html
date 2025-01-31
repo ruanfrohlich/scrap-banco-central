@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calculadora de Taxas de Juros</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        max-width: 600px;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin: 15px 0 5px;
+      }
+      input,
+      select,
+      button {
+        margin: 5px 0 15px;
+        padding: 5px;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        width: auto;
+        cursor: pointer;
+        font-weight: bold;
+        background-color: #017cff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+      }
+      button:hover {
+        background-color: #005fcc;
+      }
+      .resultado {
+        margin-top: 20px;
+        font-weight: bold;
+        white-space: pre-line; /* Permite quebra de linha no texto */
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calculadora de Taxas de Juros</h1>
+
+    <label for="startDate">Data Inicial:</label>
+    <input type="date" id="startDate" />
+
+    <label for="financingType">Tipo de Financiamento (Código no BCB):</label>
+    <select id="financingType">
+      <option value="402101">Financiamento de Veículos (402101)</option>
+      <option value="402201">Financiamento de Pessoa Física (402201)</option>
+    </select>
+
+    <label for="contractRate">Taxa de Juros do Contrato (% ao mês):</label>
+    <input type="number" id="contractRate" step="0.01" placeholder="Ex: 2.50" />
+
+    <button id="calculateBtn">Calcular</button>
+
+    <div id="result" class="resultado"></div>
+
+    <script>
+      // Exemplo de função (fake) para obter taxa média do BCB
+      async function fetchAverageRateFromBCB(
+        startDate,
+        endDate,
+        financingCode
+      ) {
+        return 2.0;
+      }
+
+      // Função principal de cálculo
+      async function calculateAverageRate() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const financingCode = document.getElementById('financingType').value;
+        const contractRateStr = document.getElementById('contractRate').value;
+        const resultDiv = document.getElementById('result');
+
+        // Limpa resultado a cada novo cálculo
+        resultDiv.textContent = '';
+
+        // Verificações básicas
+        if (!startDate || !endDate) {
+          resultDiv.textContent =
+            'Por favor, selecione a data inicial e a data final.';
+          return;
+        }
+
+        if (!contractRateStr) {
+          resultDiv.textContent =
+            'Por favor, insira a taxa de juros do contrato.';
+          return;
+        }
+
+        const contractRate = parseFloat(contractRateStr);
+
+        if (isNaN(contractRate)) {
+          resultDiv.textContent =
+            'Taxa de juros inválida. Digite um número válido.';
+          return;
+        }
+
+        try {
+          // 1) Buscar a taxa média no período (simulada)
+          const averageRate = await fetchAverageRateFromBCB(
+            startDate,
+            endDate,
+            financingCode
+          );
+
+          // 2) Calcular se a taxa do contrato está 50% acima da média
+          const limiarAbusivo = 1.5 * averageRate;
+
+          // Montando mensagem de resultado
+          let mensagem = `• Período: ${startDate} a ${endDate}\n`;
+          mensagem += `• Código do Financiamento: ${financingCode}\n\n`;
+          mensagem += `Taxa média do período (simulada): ${averageRate.toFixed(2)}% ao mês.\n`;
+          mensagem += `Taxa do contrato: ${contractRate.toFixed(2)}% ao mês.\n\n`;
+
+          if (contractRate > limiarAbusivo) {
+            mensagem +=
+              'Resultado: A taxa do contrato está mais de 50% acima da média (ABUSIVA).';
+          } else {
+            mensagem +=
+              'Resultado: A taxa do contrato NÃO está 50% acima da média.';
+          }
+
+          resultDiv.textContent = mensagem;
+        } catch (error) {
+          console.error(error);
+          resultDiv.textContent = 'Ocorreu um erro ao buscar dados do BCB.';
+        }
+      }
+
+      // Evento de clique no botão "Calcular"
+      document
+        .getElementById('calculateBtn')
+        .addEventListener('click', calculateAverageRate);
+    </script>
+  </body>
+</html>

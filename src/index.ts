@@ -76,8 +76,10 @@ const data = reqJson as unknown as IArguments;
             list.push(value.replace(' ', ''));
           });
       });
+
     if (list.length > 0) {
       const chunked = chunk(list, 4);
+      let totalMonthly: number = 0;
 
       chunked.forEach((chunk) => {
         resJson.push({
@@ -88,17 +90,15 @@ const data = reqJson as unknown as IArguments;
         });
       });
 
-      stringify(resJson, { header: true }, function (err, output) {
-        fs.writeFile(
-          process.cwd() + '/outputs/data.csv',
-          output,
-          function (err) {
-            if (err) throw err;
-            console.log('CSV Gerado com sucesso!');
-          }
-        );
-      });
+      for (const el of resJson) {
+        totalMonthly += parseFloat(el.monthlyRate);
+      }
+
+      console.log(
+        `Total média do periodo ${reqJson.periodo}: ${(totalMonthly / resJson.length).toFixed(2)}%`
+      );
     } else console.log('Falha ao buscar os dados, tente novamente.');
   }
+
   await browser.close();
 })();
