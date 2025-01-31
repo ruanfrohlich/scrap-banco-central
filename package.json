@@ -15,7 +15,6 @@
     "main": false,
     "electron": {
       "distDir": "electron",
-      "isLibrary": true,
       "engines": {
         "node": ">=22"
       },
@@ -39,13 +38,14 @@
     "icon": "./images/logo.ico"
   },
   "scripts": {
-    "dev": "nodemon --watch src -e js,ts,html -x 'ts-node src/server.ts'",
+    "dev": "nodemon --watch src -e js,ts,html -x 'yarn start'",
     "start": "yarn build && electron .",
     "build": "rimraf -rf electron && parcel build",
     "app:dir": "electron-builder --dir",
     "app:dist": "electron-builder -w"
   },
   "dependencies": {
+    "@puppeteer/browsers": "^2.7.0",
     "cheerio": "^1.0.0",
     "lodash": "^4.17.21",
     "puppeteer": "^24.1.1",

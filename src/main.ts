@@ -9,6 +9,10 @@ const createWindow = () => {
   const win = new BrowserWindow({
     width: 1280,
     height: 720,
+    maximizable: true,
+    center: true,
+    icon: '../images/logo.ico',
+    roundedCorners: true,
     webPreferences: {
       preload: electronPath + 'preload.js',
     },
@@ -28,11 +32,13 @@ app.whenReady().then(() => {
 });
 
 ipcMain.handle('fetchBCB', async (event, data: IArguments) => {
-  console.log(data);
-
   const req = await bcbScrap(data);
 
-  return req;
+  if (req) {
+    return req;
+  }
+
+  throw new Error('Falha ao buscar os dados no Banco Central.');
 });
 
 app.on('window-all-closed', () => {

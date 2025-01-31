@@ -7,7 +7,7 @@ const resJson: GenericObject[] = [];
 let totalMonthly: number = 0;
 
 const scrapBCB = async (data: IArguments) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ browser: 'chrome' });
   const page = await browser.newPage();
 
   await page.setViewport({
@@ -25,11 +25,12 @@ const scrapBCB = async (data: IArguments) => {
     // InicioPeriodo=${data.periodo}`,
       {
         waitUntil: 'networkidle2',
-        timeout: 10000,
       }
     );
 
-    await page.waitForSelector('table.table');
+    await page.waitForSelector('table.table', {
+      timeout: 10000,
+    });
 
     const htmlContent = await page.content();
 
