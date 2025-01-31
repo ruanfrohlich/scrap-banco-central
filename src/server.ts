@@ -14,6 +14,8 @@ interface IArguments extends ParsedUrlQuery {
   periodo: string;
 }
 
+const port = process.env.PORT ?? 4000;
+
 const server = createServer(async (req, res) => {
   const { url, method } = req;
 
@@ -69,6 +71,4 @@ const server = createServer(async (req, res) => {
   return res.end();
 });
 
-server.listen(3000, () =>
-  console.log('Server rodando em http://localhost:3000')
-);
+server.listen(port, () => console.log('Server rodando na porta ', port));
