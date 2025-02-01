@@ -4,8 +4,7 @@ import { chunk } from 'lodash';
 import { GenericObject, IArguments } from '../types';
 import os from 'os';
 
-const resJson: GenericObject[] = [];
-let totalMonthly: number = 0;
+let resJson: GenericObject[] = [];
 let browserPath: string = '';
 const userInfo = os.userInfo();
 
@@ -34,18 +33,14 @@ const scrapBCB = async (data: IArguments) => {
 
   try {
     await page.goto(
-      `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico/?
-    // historicotaxajurosdiario_page=1&
-    // codigoSegmento=${data.codSegmento}&
-    // codigoModalidade=${data.codModalidade}&
-    // tipoModalidade=${data.tipoModalidade}&
-    // InicioPeriodo=${data.periodo}`,
-      {
-        waitUntil: 'networkidle2',
-      }
+      `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico?historicotaxajurosdiario_page=1&codigoSegmento=1&codigoModalidade=${data.codModalidade}&tipoModalidade=D&InicioPeriodo=${data.periodo}`
     );
 
-    await page.waitForSelector('table.table', {
+    await page.screenshot({
+      path: './preview.png',
+    });
+
+    await page.waitForSelector('table.table tbody', {
       timeout: 10000,
     });
 
@@ -70,7 +65,7 @@ const scrapBCB = async (data: IArguments) => {
         const chunked = chunk(list, 4);
 
         chunked.forEach((chunk) => {
-          resJson.push({
+          resJson?.push({
             position: chunk[0],
             bankName: chunk[1],
             monthlyRate: chunk[2],
@@ -88,14 +83,23 @@ const scrapBCB = async (data: IArguments) => {
 
 export default async (data: IArguments): Promise<number> => {
   await scrapBCB(data);
+  let total = 0;
+  let monthlyAverage = 0;
 
-  for (const el of resJson) {
-    totalMonthly += parseFloat(el.monthlyRate);
-  }
+  Object.keys(resJson).forEach((el, i) => {
+    const format = parseFloat(resJson[i].monthlyRate.replace(',', '.'));
+    total += format;
+  });
 
-  const monthlyAverage = totalMonthly / resJson.length;
+  monthlyAverage = Math.floor((total / resJson.length) * 100) / 100;
 
-  totalMonthly = 0;
+  console.log({
+    total,
+    numeroDeBancos: resJson.length,
+    media: monthlyAverage,
+  });
+
+  resJson = [];
 
   return Math.floor(monthlyAverage * 100) / 100;
 };
