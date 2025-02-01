@@ -34,8 +34,8 @@
   },
   "build": {
     "appId": "com.ruanfrohlich.BCBInterestCheck",
-    "productName": "BCB Intent Check",
-    "artifactName": "BCBInterestCheck-${version}.${ext}",
+    "productName": "BCB Interest Check",
+    "artifactName": "BCBInterestCheck.${ext}",
     "icon": "./images/logo.ico"
   },
   "scripts": {
