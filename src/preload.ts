@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { IArguments } from './types';
+import { IFetchBCBArguments } from './types';
 
 contextBridge.exposeInMainWorld('versions', {
   node: () => process.versions.node,
@@ -8,5 +8,5 @@ contextBridge.exposeInMainWorld('versions', {
 });
 
 contextBridge.exposeInMainWorld('fetchBCB', {
-  fetch: (data: IArguments) => ipcRenderer.invoke('fetchBCB', data),
+  fetch: (data: IFetchBCBArguments) => ipcRenderer.invoke('fetchBCB', data),
 });

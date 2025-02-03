@@ -1,5 +1,5 @@
 import { ChangeEventHandler, FormEventHandler, useRef, useState } from 'react';
-import { IForm, TWindow } from 'src/types';
+import { IForm } from 'src/types';
 
 export function App() {
   const [formData, setFormData] = useState<IForm>({
@@ -9,7 +9,6 @@ export function App() {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const resultDiv = useRef<HTMLDivElement>(null);
-  const w = window as unknown as TWindow;
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -34,7 +33,7 @@ export function App() {
     startDate: string,
     financingCode: string
   ) {
-    const data = await w.fetchBCB.fetch({
+    const data = await window.fetchBCB.fetch({
       codSegmento: '1',
       codModalidade: financingCode,
       tipoModalidade: 'D',

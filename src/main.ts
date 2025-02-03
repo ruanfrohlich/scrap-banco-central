@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { bcbScrap } from './functions';
-import { IArguments } from './types';
+import { IFetchBCBArguments } from './types';
 
 const electronPath = path.join(__dirname, '../electron/');
 
@@ -31,7 +31,7 @@ app.whenReady().then(() => {
   });
 });
 
-ipcMain.handle('fetchBCB', async (event, data: IArguments) => {
+ipcMain.handle('fetchBCB', async (event, data: IFetchBCBArguments) => {
   const req = await bcbScrap(data);
 
   if (req) {

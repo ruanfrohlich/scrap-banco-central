@@ -1,7 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { chunk } from 'lodash';
-import { GenericObject, IArguments } from '../types';
+import { GenericObject, IFetchBCBArguments } from '../types';
 import os from 'os';
 
 let resJson: GenericObject[] = [];
@@ -19,7 +19,7 @@ switch (os.platform()) {
     break;
   }
 }
-const scrapBCB = async (data: IArguments) => {
+const scrapBCB = async (data: IFetchBCBArguments) => {
   const browser = await puppeteer.launch({
     executablePath: browserPath,
   });
@@ -81,7 +81,7 @@ const scrapBCB = async (data: IArguments) => {
   await browser.close();
 };
 
-export default async (data: IArguments): Promise<number> => {
+export default async (data: IFetchBCBArguments): Promise<number> => {
   await scrapBCB(data);
   let total = 0;
   let monthlyAverage = 0;

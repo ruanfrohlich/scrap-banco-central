@@ -1,4 +1,4 @@
-export interface IArguments {
+export interface IFetchBCBArguments {
   codSegmento: string;
   codModalidade: string;
   tipoModalidade: string;
@@ -9,13 +9,6 @@ export interface IForm {
   startDate: string;
   financingType: number;
   contractRate: number;
-}
-
-export interface TWindow extends Window {
-  [key: string]: any;
-  versions: {
-    [key: string]: () => string;
-  };
 }
 
 export type GenericObject = {
