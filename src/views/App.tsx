@@ -84,7 +84,7 @@ export function App() {
 
       // Montando mensagem de resultado
       let mensagem = `• Período inicial: ${formData.startDate}<br>`;
-      mensagem += `• Código do Financiamento: ${formData.financingType}<br>`;
+      mensagem += `• Código do Financiamento: ${formData.financingType}<br><br>`;
       mensagem += `Taxa média do período (simulada): ${averageRate.toFixed(2)}% ao mês.<br><br>`;
       mensagem += `Taxa do contrato: ${contractRate.toFixed(2)}% ao mês.<br>`;
 

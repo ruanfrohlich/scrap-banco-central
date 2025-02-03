@@ -35,7 +35,7 @@
     "icon": "./src/images/logo.ico"
   },
   "scripts": {
-    "dev": "concurrently \"parcel ./src/views/index.html -p 3000\" \"electron .\"",
+    "dev": "nodemon -w src -e js,ts,tsx,html,css -x 'parcel watch & electron .'",
     "start": "rimraf -rf electron && parcel build && electron .",
     "build": "rimraf -rf electron && parcel build && electron-builder -wl"
   },
@@ -47,12 +47,12 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "cheerio": "^1.0.0",
-    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "electron": "^34.0.2",
     "electron-builder": "^25.1.8",
     "electron-builder-squirrel-windows": "^25.1.8",
     "lodash": "^4.17.21",
+    "nodemon": "^3.1.9",
     "parcel": "^2.13.3",
     "prettier": "^3.4.2",
     "process": "^0.11.10",

@@ -4,12 +4,11 @@ import { bcbScrap } from './functions';
 import { IArguments } from './types';
 
 const electronPath = path.join(__dirname, '../electron/');
-const isDev = process.env.NODE_ENV !== 'production';
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: 800,
+    height: 600,
     maximizable: true,
     center: true,
     icon: '../images/logo.ico',
@@ -19,9 +18,7 @@ const createWindow = () => {
     },
   });
 
-  isDev
-    ? win.loadURL('http://localhost:3000')
-    : win.loadFile(electronPath + 'static/index.html');
+  win.loadFile(electronPath + 'static/index.html');
 };
 
 app.whenReady().then(() => {
