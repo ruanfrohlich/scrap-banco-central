@@ -4,6 +4,7 @@ import { bcbScrap } from './functions';
 import { IArguments } from './types';
 
 const electronPath = path.join(__dirname, '../electron/');
+const isDev = process.env.NODE_ENV !== 'production';
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -18,7 +19,9 @@ const createWindow = () => {
     },
   });
 
-  win.loadFile(electronPath + 'static/index.html');
+  isDev
+    ? win.loadURL('http://localhost:3000')
+    : win.loadFile(electronPath + 'static/index.html');
 };
 
 app.whenReady().then(() => {
