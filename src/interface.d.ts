@@ -1,16 +1,14 @@
-import { IFetchBCBArguments } from "./types";
+import { IFetchBCBArguments } from './types';
 
-export interface IVersionsAPI {
-  [key: string]: () => string;
-}
-
-export interface IFetchBCB {
-  fetch: (data: IFetchBCBArguments) => Promise<number>;
+export interface IElectronAPI {
+  fetchBCB: (data: IFetchBCBArguments) => Promise<number>;
+  onUpdateCounter: (callback: (value: number) => void) => void;
+  counterValue: (value: number) => void;
 }
 
 declare global {
   interface Window {
     versions: IVersionsAPI;
-    fetchBCB: IFetchBCB;
+    electronAPI: IElectronAPI;
   }
 }

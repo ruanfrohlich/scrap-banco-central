@@ -1,4 +1,11 @@
-import { ChangeEventHandler, FormEventHandler, useRef, useState } from 'react';
+import {
+  ChangeEventHandler,
+  FormEventHandler,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { IForm } from 'src/types';
 
 export function App() {
@@ -8,7 +15,8 @@ export function App() {
     startDate: new Date().toISOString(),
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const resultDiv = useRef<HTMLDivElement>(null);  
+  const resultDiv = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLElement>(null);
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -33,7 +41,7 @@ export function App() {
     startDate: string,
     financingCode: string
   ) {
-    const data = await window.fetchBCB.fetch({
+    const data = await window.electronAPI.fetchBCB({
       codSegmento: '1',
       codModalidade: financingCode,
       tipoModalidade: 'D',
@@ -105,15 +113,32 @@ export function App() {
     }
   }
 
+  useLayoutEffect(() => {
+    const counter = counterRef.current;
+
+    if (!counter) return;
+
+    window.electronAPI.onUpdateCounter((value: number) => {
+      const oldValue = Number(counter.innerText);
+      const newValue = oldValue + value;
+      counter.innerText = newValue.toString();
+      window.electronAPI.counterValue(newValue);
+    });
+  }, []);
+
   return (
     <main className="flex justify-center w-[100vw] h-[100vh]">
       <div className="p-2 pt-[120px] max-w-[400px] my-0 mx-auto">
-        <h1 className="text-2xl">Calculadora de Taxas de Juros</h1>
+        Current value:{' '}
+        <strong ref={counterRef} id="counter">
+          0
+        </strong>
+        <h1 className="text-2xl mb-4">Calculadora de Taxas de Juros</h1>
         <form noValidate onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 mb-4">
             <div className="flex flex-col">
-              <label className="uppercase" htmlFor="startDate">
-                Data Iniciall:
+              <label className="text-[12px] uppercase" htmlFor="startDate">
+                Data Inicial:
               </label>
               <input
                 className="py-1 px-2 rounded border border-gray-800 focus:outline-0 focus:shadow-lg transition"
@@ -123,7 +148,7 @@ export function App() {
               />
             </div>
             <div className="flex flex-col">
-              <label className="uppercase" htmlFor="financingType">
+              <label className="text-[12px] uppercase" htmlFor="financingType">
                 Tipo de Financiamento (Código no BCB):
               </label>
               <select
@@ -138,7 +163,7 @@ export function App() {
               </select>
             </div>
             <div className="flex flex-col">
-              <label className="uppercase" htmlFor="contractRate">
+              <label className="text-[12px] uppercase" htmlFor="contractRate">
                 Taxa de Juros do Contrato (% ao mês):
               </label>
               <input
