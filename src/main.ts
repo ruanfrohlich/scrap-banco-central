@@ -3,12 +3,12 @@ import path from 'path';
 import { bcbScrap } from './functions';
 import { IFetchBCBArguments } from './types';
 
-const electronPath = path.join(__dirname, '../electron/');
+const electronPath = path.join(__dirname, '../_electron/');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     maximizable: true,
     center: true,
     icon: '../images/logo.ico',
@@ -22,7 +22,7 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-  createWindow();
+  createWindow();  
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

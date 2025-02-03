@@ -8,7 +8,7 @@ export function App() {
     startDate: new Date().toISOString(),
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const resultDiv = useRef<HTMLDivElement>(null);
+  const resultDiv = useRef<HTMLDivElement>(null);  
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -113,7 +113,7 @@ export function App() {
           <div className="flex flex-col gap-4 mb-4">
             <div className="flex flex-col">
               <label className="uppercase" htmlFor="startDate">
-                Data Inicial:
+                Data Iniciall:
               </label>
               <input
                 className="py-1 px-2 rounded border border-gray-800 focus:outline-0 focus:shadow-lg transition"
