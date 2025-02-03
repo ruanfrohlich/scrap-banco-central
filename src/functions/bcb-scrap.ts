@@ -36,10 +36,6 @@ const scrapBCB = async (data: IFetchBCBArguments) => {
       `https://www.bcb.gov.br/estatisticas/reporttxjuroshistorico?historicotaxajurosdiario_page=1&codigoSegmento=1&codigoModalidade=${data.codModalidade}&tipoModalidade=D&InicioPeriodo=${data.periodo}`
     );
 
-    await page.screenshot({
-      path: './preview.png',
-    });
-
     await page.waitForSelector('table.table tbody', {
       timeout: 10000,
     });
