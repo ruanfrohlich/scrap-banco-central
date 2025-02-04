@@ -42,10 +42,6 @@
     "productName": "BCB Interest Check",
     "artifactName": "BCBInterestCheck.${ext}",
     "icon": "./src/images/logo.ico",
-    "publish": {
-      "provider": "github",
-      "owner": "ruanfrohlich"
-    },
     "win": {
       "signtoolOptions": {
         "publisherName": "Ruan Frohlich"
@@ -54,6 +50,11 @@
     },
     "linux": {
       "target": "AppImage"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "ruanfrohlich",
+      "releaseType": "release"
     }
   },
   "scripts": {
@@ -61,7 +62,7 @@
     "clean": "rimraf -rf electron .parcel-cache",
     "start": "yarn clean && parcel build && electron .",
     "build": "yarn clean && parcel build && electron-builder -w",
-    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTag"
+    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p always"
   },
   "dependencies": {
     "electron-updater": "^6.3.9"
