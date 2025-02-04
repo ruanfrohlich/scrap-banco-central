@@ -1,7 +1,6 @@
 import {
   ChangeEventHandler,
   FormEventHandler,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -17,6 +16,7 @@ export function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const resultDiv = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLElement>(null);
+  const versionRef = useRef<HTMLParagraphElement>(null);
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -114,20 +114,30 @@ export function App() {
   }
 
   useLayoutEffect(() => {
+    const { getAppVersion, appVersion, onUpdateCounter, counterValue } =
+      window.electronAPI;
     const counter = counterRef.current;
+    const version = versionRef.current;
 
-    if (!counter) return;
+    if (!counter || !version) return;
 
-    window.electronAPI.onUpdateCounter((value: number) => {
+    onUpdateCounter((value: number) => {
       const oldValue = Number(counter.innerText);
       const newValue = oldValue + value;
       counter.innerText = newValue.toString();
-      window.electronAPI.counterValue(newValue);
+      counterValue(newValue);
+    });
+
+    getAppVersion();
+
+    appVersion((value) => {
+      version.innerText = 'Versão atual: ' + value;
     });
   }, []);
 
   return (
     <main className="flex justify-center w-[100vw] h-[100vh]">
+      <p ref={versionRef}></p>
       <div className="p-2 pt-[120px] max-w-[400px] my-0 mx-auto">
         Current value:{' '}
         <strong ref={counterRef} id="counter">

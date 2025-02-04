@@ -5,6 +5,7 @@ import { IFetchBCBArguments } from './types';
 import 'dotenv/config';
 
 const electronPath = path.join(__dirname, '../_electron/');
+let win: BrowserWindow;
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -51,7 +52,15 @@ const createWindow = () => {
   return win;
 };
 
-app.on('ready', () => {
+app.whenReady().then(() => {
+  win = createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      win = createWindow();
+    }
+  });
+
   ipcMain.handle('fetchBCB', async (_event, data: IFetchBCBArguments) => {
     const req = await bcbScrap(data);
 
@@ -62,22 +71,16 @@ app.on('ready', () => {
     throw new Error('Falha ao buscar os dados no Banco Central.');
   });
 
-  ipcMain.on('counter-value', (_event, value: number) => {
+  ipcMain.on('counter-value', (_event, value) => {
     console.log(value);
   });
 
-  if (BrowserWindow.getAllWindows().length === 0) {
-    const win = createWindow();
-
-    const updater = appUpdater(win);
-
-    updater.checkForUpdates();
-  }
+  ipcMain.on('app-version', (_event) => {
+    _event.sender.send('check-version', app.getVersion());
+  });
 });
 
 app.on('window-all-closed', () => {
-  console.log('chamou onwindow-all-closed');
-
   if (process.platform !== 'darwin') {
     app.quit();
   }

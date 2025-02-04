@@ -50,7 +50,8 @@
     },
     "linux": {
       "target": [
-        "deb"
+        "deb",
+        "flatpak"
       ],
       "category": "Utility",
       "icon": "./src/images/logo.png"
@@ -63,7 +64,7 @@
   },
   "scripts": {
     "dev": "nodemon -w 'src/*' -e js,ts,tsx,css,html -x 'yarn start'",
-    "clean": "rimraf -rf electron .parcel-cache",
+    "clean": "rimraf -rf _electron .parcel-cache",
     "start": "yarn clean && parcel build && electron .",
     "build": "yarn clean && parcel build && electron-builder -wl",
     "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder -wl -p always"
