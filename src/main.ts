@@ -1,16 +1,13 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import path from 'path';
-import { bcbScrap } from './functions';
+import { bcbScrap, appUpdater } from './functions';
 import { IFetchBCBArguments } from './types';
-import { autoUpdater } from 'electron-updater';
 import 'dotenv/config';
 
 const electronPath = path.join(__dirname, '../_electron/');
 
-let win: BrowserWindow | null;
-
 const createWindow = () => {
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1280,
     height: 720,
     maximizable: true,
@@ -48,55 +45,13 @@ const createWindow = () => {
 
   Menu.setApplicationMenu(menu);
 
-  win.on('closed', () => {
-    win = null;
-  });
-
   win.loadFile(electronPath + 'static/index.html');
   win.webContents.openDevTools();
+
+  return win;
 };
 
-function sendStatusToWindow(text: string) {
-  console.log(text);
-  win?.webContents.send('message', text);
-}
-
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
-});
-
-autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
-});
-
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
-});
-
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
-});
-
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message =
-    log_message +
-    ' (' +
-    progressObj.transferred +
-    '/' +
-    progressObj.total +
-    ')';
-  sendStatusToWindow(log_message);
-});
-
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
-});
-
-app.whenReady().then(() => {
-  autoUpdater.checkForUpdatesAndNotify();
-
+app.on('ready', () => {
   ipcMain.handle('fetchBCB', async (_event, data: IFetchBCBArguments) => {
     const req = await bcbScrap(data);
 
@@ -111,16 +66,18 @@ app.whenReady().then(() => {
     console.log(value);
   });
 
-  createWindow();
+  if (BrowserWindow.getAllWindows().length === 0) {
+    const win = createWindow();
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
+    const updater = appUpdater(win);
+
+    updater.checkForUpdates();
+  }
 });
 
 app.on('window-all-closed', () => {
+  console.log('chamou onwindow-all-closed');
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
