@@ -1,6 +1,6 @@
 {
   "name": "bcb-intetest-check",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "_electron/main.js",
   "author": {
@@ -44,7 +44,7 @@
     "icon": "./src/images/logo.ico",
     "publish": {
       "provider": "github",
-      "owner": "Ruan Frohlich"
+      "owner": "ruanfrohlich"
     },
     "win": {
       "signtoolOptions": {
@@ -58,7 +58,7 @@
     "clean": "rimraf -rf electron .parcel-cache",
     "start": "yarn clean && parcel build && electron .",
     "build": "yarn clean && parcel build && electron-builder -w",
-    "pub": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTag"
+    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTagOrDraft"
   },
   "dependencies": {
     "electron-updater": "^6.3.9"
