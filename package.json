@@ -1,6 +1,6 @@
 {
   "name": "bcb-intetest-check",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "_electron/main.js",
   "author": {
