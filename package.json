@@ -61,7 +61,7 @@
     "clean": "rimraf -rf electron .parcel-cache",
     "start": "yarn clean && parcel build && electron .",
     "build": "yarn clean && parcel build && electron-builder -w",
-    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p always"
+    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTag"
   },
   "dependencies": {
     "electron-updater": "^6.3.9"
