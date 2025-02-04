@@ -7,6 +7,10 @@
     "name": "Ruan Frohlich",
     "email": "ruanfrohlich@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruanfrohlich/scrap-banco-central.git"
+  },
   "description": "Programa para verificar taxa de  juros abusiva.",
   "targets": {
     "main": false,
@@ -37,12 +41,24 @@
     "appId": "com.ruanfrohlich.BCBInterestCheck",
     "productName": "BCB Interest Check",
     "artifactName": "BCBInterestCheck.${ext}",
-    "icon": "./src/images/logo.ico"
+    "icon": "./src/images/logo.ico",
+    "publish": {
+      "provider": "github",
+      "owner": "Ruan Frohlich"
+    },
+    "win": {
+      "signtoolOptions": {
+        "publisherName": "Ruan Frohlich"
+      },
+      "target": "nsis"
+    }
   },
   "scripts": {
     "dev": "nodemon -w 'src/*' -e js,ts,tsx,css,html -x 'yarn start'",
-    "start": "cross-env NODE_ENV=production rimraf -rf electron .parcel-cache && parcel build && electron .",
-    "build": "cross-env NODE_ENV=production rimraf -rf electron && parcel build && electron-builder -wl"
+    "clean": "rimraf -rf electron .parcel-cache",
+    "start": "yarn clean && parcel build && electron .",
+    "build": "yarn clean && parcel build && electron-builder -w",
+    "pub": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTag"
   },
   "dependencies": {
     "electron-updater": "^6.3.9"

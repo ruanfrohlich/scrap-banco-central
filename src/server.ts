@@ -1,12 +1,10 @@
 import { createServer } from 'http';
 import { ParsedUrlQuery } from 'querystring';
 import { parse } from 'url';
-import { StatusCodes } from 'http-status-codes';
 import { isUndefined, some } from 'lodash';
 import { bcbScrap } from './functions';
 import fs from 'node:fs';
 import path from 'path';
-import 'dotenv/config';
 
 interface IArguments extends ParsedUrlQuery {
   codSegmento: string;
@@ -29,7 +27,7 @@ const server = createServer(async (req, res) => {
       if (
         some([codModalidade, codSegmento, periodo, tipoModalidade], isUndefined)
       ) {
-        res.writeHead(StatusCodes.BAD_REQUEST, {
+        res.writeHead(400, {
           'Content-Type': 'application/json',
         });
         res.end(
@@ -49,7 +47,7 @@ const server = createServer(async (req, res) => {
         tipoModalidade,
       });
 
-      res.writeHead(StatusCodes.OK, { 'Content-Type': 'application/json' });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(
         JSON.stringify({
           periodo,
