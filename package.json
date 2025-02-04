@@ -51,6 +51,9 @@
         "publisherName": "Ruan Frohlich"
       },
       "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
     }
   },
   "scripts": {
@@ -58,7 +61,7 @@
     "clean": "rimraf -rf electron .parcel-cache",
     "start": "yarn clean && parcel build && electron .",
     "build": "yarn clean && parcel build && electron-builder -w",
-    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p onTagOrDraft"
+    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder --win -p always"
   },
   "dependencies": {
     "electron-updater": "^6.3.9"
