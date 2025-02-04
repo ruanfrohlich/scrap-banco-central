@@ -44,7 +44,9 @@
     "start": "cross-env NODE_ENV=production rimraf -rf electron .parcel-cache && parcel build && electron .",
     "build": "cross-env NODE_ENV=production rimraf -rf electron && parcel build && electron-builder -wl"
   },
-  "dependencies": {},
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.3",
     "@types/lodash": "^4.17.15",
