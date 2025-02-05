@@ -5,7 +5,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { IForm } from 'src/types';
+import { IForm, IUpdaterObject } from 'types';
+import { UpdaterModal } from './components';
 
 export function App() {
   const [formData, setFormData] = useState<IForm>({
@@ -14,9 +15,9 @@ export function App() {
     startDate: new Date().toISOString(),
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [updateDetails, setUpdateDetails] = useState<IUpdaterObject>();
+  const [closeModal, setCloseModal] = useState<boolean>(false);
   const resultDiv = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLElement>(null);
-  const versionRef = useRef<HTMLParagraphElement>(null);
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -114,35 +115,28 @@ export function App() {
   }
 
   useLayoutEffect(() => {
-    const { getAppVersion, appVersion, onUpdateCounter, counterValue } =
-      window.electronAPI;
-    const counter = counterRef.current;
-    const version = versionRef.current;
+    const { onUpdate, onMessage } = window.electronAPI;
 
-    if (!counter || !version) return;
-
-    onUpdateCounter((value: number) => {
-      const oldValue = Number(counter.innerText);
-      const newValue = oldValue + value;
-      counter.innerText = newValue.toString();
-      counterValue(newValue);
+    onMessage((message) => {
+      console.log(message);
     });
 
-    getAppVersion();
+    onUpdate((details) => {
+      console.log(details);
 
-    appVersion((value) => {
-      version.innerText = 'Versão atual: ' + value;
+      setUpdateDetails(details);
     });
   }, []);
 
   return (
     <main className="flex justify-center w-[100vw] h-[100vh]">
-      <p ref={versionRef}></p>
+      {updateDetails && !closeModal && (
+        <UpdaterModal
+          onClose={() => setCloseModal(true)}
+          details={updateDetails}
+        />
+      )}
       <div className="p-2 pt-[120px] max-w-[400px] my-0 mx-auto">
-        Current value:{' '}
-        <strong ref={counterRef} id="counter">
-          0
-        </strong>
         <h1 className="text-2xl mb-4">Calculadora de Taxas de Juros</h1>
         <form noValidate onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 mb-4">

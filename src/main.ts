@@ -1,10 +1,10 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import path from 'path';
-import { bcbScrap, appUpdater } from './functions';
+import { appUpdater, bcbScrap } from './functions';
 import { IFetchBCBArguments } from './types';
-import 'dotenv/config';
 
 const electronPath = path.join(__dirname, '../_electron/');
+const isDev = process.env.NODE_ENV !== 'production';
 let win: BrowserWindow;
 
 const createWindow = () => {
@@ -25,14 +25,6 @@ const createWindow = () => {
       label: 'BCB Interest Check',
       submenu: [
         {
-          click: () => win?.webContents.send('update-counter', 1),
-          label: 'Increment',
-        },
-        {
-          click: () => win?.webContents.send('update-counter', -1),
-          label: 'Decrement',
-        },
-        {
           label: 'Sobre',
           role: 'about',
         },
@@ -47,13 +39,15 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu);
 
   win.loadFile(electronPath + 'static/index.html');
-  win.webContents.openDevTools();
+  isDev && win.webContents.openDevTools();
 
   return win;
 };
 
 app.whenReady().then(() => {
   win = createWindow();
+
+  appUpdater(win, isDev);
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -71,13 +65,11 @@ app.whenReady().then(() => {
     throw new Error('Falha ao buscar os dados no Banco Central.');
   });
 
-  ipcMain.on('counter-value', (_event, value) => {
-    console.log(value);
+  ipcMain.on('app-version', () => {
+    win.webContents.send('check-version', app.getVersion());
   });
 
-  ipcMain.on('app-version', (_event) => {
-    _event.sender.send('check-version', app.getVersion());
-  });
+  ipcMain.on('close-app', () => app.quit());
 });
 
 app.on('window-all-closed', () => {
