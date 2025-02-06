@@ -3,8 +3,10 @@ import type { IUpdaterObject } from 'types';
 export const UpdaterModal = ({
   details,
   onClose,
+  oldVersion,
 }: {
   details: IUpdaterObject;
+  oldVersion: string;
   onClose: () => void;
 }) => {
   return (
@@ -27,7 +29,7 @@ export const UpdaterModal = ({
 
         <div className="p-3 flex items-center">
           <span className="font-bold text-white bg-red-600 rounded-2xl py-1 px-3">
-            {details.version}
+            {oldVersion}
           </span>
           <span className="block m-5 w-[16] h-[15] rotate-180 [&>svg]:w-full [&>svg]:h-full">
             <svg
@@ -44,7 +46,7 @@ export const UpdaterModal = ({
         </div>
 
         <button
-          onClick={window.electronAPI.quitApp}
+          onClick={window.electronAPI.quitAndUpdate}
           className="rounded-2xl bg-blue-500 text-white py-1 px-3 cursor-pointer hover:bg-green-400 transition"
         >
           Atualizar

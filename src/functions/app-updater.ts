@@ -1,14 +1,16 @@
 import { BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
-export const appUpdater = (win: BrowserWindow, isDev: boolean) => {
-  autoUpdater.checkForUpdates();
+export const appUpdater = (win: BrowserWindow) => {
+  const updater = autoUpdater;
 
-  autoUpdater.on('checking-for-update', () => {
-    win.webContents.send('message', 'Checando atualizações...');
+  updater.checkForUpdates();
+
+  updater.on('update-available', (info) => {
+    updater.on('update-downloaded', () =>
+      win.webContents.send('check-update', info)
+    );
   });
 
-  autoUpdater.on('update-available', (info) => {
-    win.webContents.send('check-update', info);
-  });
+  return updater;
 };

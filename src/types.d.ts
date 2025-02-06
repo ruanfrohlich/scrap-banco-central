@@ -37,6 +37,10 @@ export interface IElectronAPI {
   onUpdate: (cb: (details: IUpdaterObject) => void) => void;
   onMessage: (cb: (message: string) => void) => void;
   quitApp: () => void;
+  quitAndUpdate: () => void;
+  appVersion: () => void;
+  onAppVersion: (cb: (version: string) => void) => void;
+  getAppVersion: () => void;
 }
 
 declare global {

@@ -8,4 +8,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onMessage: (cb: (message: string) => void) =>
     ipcRenderer.on('message', (evt, message) => cb(message)),
   quitApp: () => ipcRenderer.send('close-app'),
+  quitAndUpdate: () => ipcRenderer.send('quit-and-update'),
+  getAppVersion: () => ipcRenderer.send('get-app-version'),
+  onAppVersion: (cb: (version: string) => void) =>
+    ipcRenderer.on('check-version', (evt, version) => cb(version)),
 });

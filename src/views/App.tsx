@@ -18,6 +18,7 @@ export function App() {
   const [updateDetails, setUpdateDetails] = useState<IUpdaterObject>();
   const [closeModal, setCloseModal] = useState<boolean>(false);
   const resultDiv = useRef<HTMLDivElement>(null);
+  const [appVersion, setAppVersion] = useState<string>('');
 
   const setValue: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (
     evt
@@ -115,7 +116,9 @@ export function App() {
   }
 
   useLayoutEffect(() => {
-    const { onUpdate, onMessage } = window.electronAPI;
+    const { onUpdate, onMessage, getAppVersion, onAppVersion } =
+      window.electronAPI;
+    getAppVersion();
 
     onMessage((message) => {
       console.log(message);
@@ -126,14 +129,18 @@ export function App() {
 
       setUpdateDetails(details);
     });
+
+    onAppVersion((version) => setAppVersion(version));
   }, []);
 
   return (
     <main className="flex justify-center w-[100vw] h-[100vh]">
+      <p className="fixed bottom-0 left-2.5">Version: {appVersion}</p>
       {updateDetails && !closeModal && (
         <UpdaterModal
           onClose={() => setCloseModal(true)}
           details={updateDetails}
+          oldVersion={appVersion}
         />
       )}
       <div className="p-2 pt-[120px] max-w-[400px] my-0 mx-auto">

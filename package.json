@@ -1,5 +1,5 @@
 {
-  "name": "bcb-intetest-check",
+  "name": "bcb-interest-check",
   "version": "1.0.0",
   "license": "MIT",
   "main": "_electron/main.js",
@@ -61,24 +61,23 @@
   "scripts": {
     "dev": "nodemon -w 'src/*' -e js,ts,tsx,css,html -x 'yarn start'",
     "clean": "rimraf -rf _electron .parcel-cache",
-    "start": "yarn clean && parcel build && electron .",
-    "build": "yarn clean && parcel build && electron-builder -l",
-    "release": "rimraf _electron .parcel-cache dist && parcel build &&  electron-builder -wl -p always"
+    "start": "yarn clean && parcel build && cross-env NODE_ENV=production electron .",
+    "build": "yarn clean && parcel build && cross-env NODE_ENV=production electron-builder -wl",
+    "release": "rimraf _electron .parcel-cache dist && parcel build && cross-env NODE_ENV=production electron-builder -wl -p always"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
+    "electron-updater": "^6.3.9",
     "lodash": "^4.17.21",
-    "puppeteer": "^24.1.1",
-    "electron-updater": "^6.3.9"
+    "puppeteer": "^24.1.1"
   },
   "devDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "@tailwindcss/postcss": "^4.0.3",
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "cross-env": "^7.0.3",
     "electron": "^34.0.2",
     "electron-builder": "^25.1.8",
     "electron-builder-squirrel-windows": "^25.1.8",
@@ -86,6 +85,8 @@
     "parcel": "^2.13.3",
     "prettier": "^3.4.2",
     "process": "^0.11.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4.0.3",
     "ts-node": "^10.9.2",
