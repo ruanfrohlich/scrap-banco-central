@@ -30,7 +30,7 @@
       "distDir": "_electron/static",
       "publicUrl": ".",
       "source": [
-        "src/views/index.html"
+        "src/views/templates/index.html"
       ]
     }
   },
