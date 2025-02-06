@@ -61,9 +61,9 @@
   "scripts": {
     "dev": "nodemon -w 'src/*' -e js,ts,tsx,css,html -x 'yarn start'",
     "clean": "rimraf -rf _electron .parcel-cache",
-    "start": "yarn clean && parcel build && cross-env NODE_ENV=production electron .",
-    "build": "yarn clean && parcel build && cross-env NODE_ENV=production electron-builder -wl",
-    "release": "rimraf _electron .parcel-cache dist && parcel build && cross-env NODE_ENV=production electron-builder -wl -p always"
+    "start": "yarn clean && parcel build && electron .",
+    "build": "yarn clean && parcel build && electron-builder -wl",
+    "release": "rimraf _electron .parcel-cache dist && parcel build && electron-builder -wl -p always"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
@@ -77,7 +77,6 @@
     "@types/node": "^22.12.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "cross-env": "^7.0.3",
     "electron": "^34.0.2",
     "electron-builder": "^25.1.8",
     "electron-builder-squirrel-windows": "^25.1.8",
